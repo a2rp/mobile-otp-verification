@@ -1,14 +1,34 @@
-*,
-::before,
-::after {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 12px;
-}
-
-.container {
-    // border: 1px solid #f00;
-    padding: 15px;
-}
+.app { min-height: 100vh; color: #e7eff7; background: radial-gradient(circle at 15% 0%, #173b52 0, #081421 42%, #050b12 100%); }
+.header { position: fixed; inset: 0 0 auto; z-index: 10; display: flex; align-items: center; justify-content: space-between; min-height: 74px; padding: 0 5vw; border-bottom: 1px solid rgba(150, 194, 225, 0.18); background: rgba(5, 15, 25, 0.92); backdrop-filter: blur(14px); }
+.brand { display: inline-flex; align-items: center; gap: 0.7rem; color: #fff; text-decoration: none; }
+.brand img { width: 42px; height: 42px; padding: 0.3rem; border: 1px solid #4b86ad; border-radius: 11px; object-fit: contain; background: #10293b; }
+.brand span { display: grid; gap: 0.1rem; }
+.brand strong { font-size: 1rem; }
+.brand small { color: #85a0b7; font-size: 0.72rem; }
+.headerStatus { display: inline-flex; align-items: center; gap: 0.45rem; color: #85a0b7; font-size: 0.82rem; }
+.headerStatus svg { color: #75dbad; }
+.main { min-height: calc(100vh - 74px); padding: 125px 1rem 4rem; }
+.card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 400px); align-items: center; gap: clamp(2rem, 7vw, 7rem); max-width: 1050px; margin: 0 auto; padding: clamp(1.5rem, 5vw, 4rem); border: 1px solid rgba(150, 194, 225, 0.22); border-radius: 26px; background: rgba(12, 31, 48, 0.78); box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25); }
+.eyebrow { display: inline-flex; align-items: center; gap: 0.45rem; color: #75cfff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.cardIntro h1 { max-width: 550px; margin: 1rem 0; color: #f5faff; font-size: clamp(2.3rem, 6vw, 4.7rem); line-height: 1; letter-spacing: -0.06em; }
+.cardIntro p { max-width: 500px; margin: 0; color: #9fb8ca; font-size: 1rem; line-height: 1.7; }
+.points { display: grid; gap: 0.7rem; margin-top: 2rem; color: #c9dce9; }
+.points span { display: inline-flex; align-items: center; gap: 0.55rem; }
+.points svg { color: #75dbad; }
+.form { padding: clamp(1.25rem, 4vw, 2rem); border: 1px solid rgba(150, 194, 225, 0.22); border-radius: 18px; background: rgba(4, 15, 27, 0.55); }
+.form h2 { margin: 0 0 1.25rem; color: #fff; font-size: 1.45rem; }
+.form label { display: block; margin-bottom: 0.5rem; color: #c9dce9; font-size: 0.85rem; font-weight: 600; }
+.form :global(.react-tel-input) { width: 100%; }
+.form :global(.react-tel-input .form-control) { width: 100%; min-height: 40px; border: 1px solid rgba(150, 194, 225, 0.26); border-radius: 8px; color: #fff; background: #0b2133; }
+.form :global(.react-tel-input .flag-dropdown) { border: 1px solid rgba(150, 194, 225, 0.26); background: #0b2133; }
+.form :global(.react-tel-input .selected-flag:hover), .form :global(.react-tel-input .selected-flag:focus) { background: #15364d; }
+.form :global(#recaptcha) { min-height: 10px; margin-top: 0.8rem; }
+.textButton { width: 100%; margin-top: 1rem; color: #87d6ff; cursor: pointer; }
+.textButton:hover { color: #fff; text-shadow: 0 0 12px rgba(117, 207, 255, 0.35); }
+.footer { padding: 2rem 1rem 1.25rem; border-top: 1px solid rgba(150, 194, 225, 0.18); text-align: center; background: rgba(5, 15, 25, 0.72); }
+.footerLinks { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.45rem; }
+.footerLinks a { display: grid; width: 35px; height: 35px; place-items: center; border: 1px solid rgba(150, 194, 225, 0.26); border-radius: 9px; color: #b9d0df; transition: color 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+.footerLinks a:hover { color: #fff; border-color: #75cfff; box-shadow: 0 0 16px rgba(117, 207, 255, 0.2); }
+.footerBottom { margin-top: 1rem; color: #85a0b7; font-size: 0.8rem; }
+.footerBottom a { margin-left: 0.25rem; color: #fff; font-weight: 700; }
+@media (max-width: 760px) { .header { padding: 0 1rem; } .headerStatus { display: none; } .card { grid-template-columns: 1fr; gap: 2rem; } .cardIntro h1 { max-width: 600px; } }

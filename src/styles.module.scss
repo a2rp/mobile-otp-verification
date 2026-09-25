@@ -32,3 +32,39 @@
 .footerBottom { margin-top: 1rem; color: #85a0b7; font-size: 0.8rem; }
 .footerBottom a { margin-left: 0.25rem; color: #fff; font-weight: 700; }
 @media (max-width: 760px) { .header { padding: 0 1rem; } .headerStatus { display: none; } .card { grid-template-columns: 1fr; gap: 2rem; } .cardIntro h1 { max-width: 600px; } }
+.goTopButton {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 20;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid #6ac3ff;
+    border-radius: 50%;
+    color: #071421;
+    background: #6ac3ff;
+    cursor: pointer;
+    transition: border-color 160ms ease, box-shadow 160ms ease, text-shadow 160ms ease;
+}
+
+.goTopButton:hover,
+.goTopButton:focus-visible {
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(106, 195, 255, 0.35);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
+    outline: none;
+}
+
+.goTopButton svg {
+    width: 18px;
+    height: 18px;
+}
+
+@media (max-width: 560px) {
+    .goTopButton {
+        right: 16px;
+        bottom: 16px;
+    }
+}

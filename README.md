@@ -7,7 +7,7 @@ A responsive React demo for verifying a phone number with Firebase Authenticatio
 - International phone number input.
 - Firebase SMS OTP request and verification flow.
 - Recaptcha protection and clear success/error feedback.
-- Responsive fixed branded header and icon-only footer links.
+- Responsive fixed branded header, complete icon-only footer links, and a floating go-to-top control.
 
 ## Tech Stack
 

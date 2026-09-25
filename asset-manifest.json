@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/mobile-otp-verification/static/css/main.c62fed4c.css",
-    "main.js": "/mobile-otp-verification/static/js/main.01a1d9a7.js",
+    "main.css": "/mobile-otp-verification/static/css/main.6572138c.css",
+    "main.js": "/mobile-otp-verification/static/js/main.ed28de36.js",
     "index.html": "/mobile-otp-verification/index.html",
-    "main.c62fed4c.css.map": "/mobile-otp-verification/static/css/main.c62fed4c.css.map",
-    "main.01a1d9a7.js.map": "/mobile-otp-verification/static/js/main.01a1d9a7.js.map"
+    "main.6572138c.css.map": "/mobile-otp-verification/static/css/main.6572138c.css.map",
+    "main.ed28de36.js.map": "/mobile-otp-verification/static/js/main.ed28de36.js.map"
   },
   "entrypoints": [
-    "static/css/main.c62fed4c.css",
-    "static/js/main.01a1d9a7.js"
+    "static/css/main.6572138c.css",
+    "static/js/main.ed28de36.js"
   ]
 }

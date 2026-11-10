@@ -20,7 +20,11 @@ npm install
 npm start
 ```
 
-Before testing real SMS verification, add the Firebase project values in `src/firebase/config.js` and enable Phone Authentication in Firebase.
+1. Copy `.env.example` to `.env.local`.
+2. Add the Firebase web app values to `.env.local`.
+3. Enable Phone sign-in in Firebase Authentication and add your local and deployed domains to Firebase's authorized domains.
+
+The Firebase client configuration is included in the browser bundle. Use the Firebase web app config, restrict its API key to Firebase services, and never place privileged Google Cloud API keys in these variables.
 
 ## Deploy
 
@@ -28,6 +32,8 @@ Before testing real SMS verification, add the Firebase project values in `src/fi
 npm run build
 npm run deploy
 ```
+
+Set the same `REACT_APP_FIREBASE_*` variables in the environment that builds the deployed site. The app shows a setup notice when the required values are missing.
 
 ## Screenshot
 

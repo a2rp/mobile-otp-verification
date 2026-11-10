@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, TextField } from "@mui/material";
 import {
     FiCheckCircle,
@@ -17,7 +17,7 @@ import { SiPatreon } from "react-icons/si";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { auth } from "./firebase/config";
+import { auth, isFirebaseConfigured } from "./firebase/config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "./styles.module.scss";
@@ -35,12 +35,37 @@ const socialLinks = [
     ["Patreon", "https://www.patreon.com/a2rp", SiPatreon],
 ];
 
+const authErrorMessages = {
+    "auth/invalid-phone-number": "Enter a valid phone number, including its country code.",
+    "auth/too-many-requests": "Too many attempts. Wait a while before requesting another code.",
+    "auth/quota-exceeded": "SMS verification is temporarily unavailable. Try again later.",
+    "auth/operation-not-allowed": "Phone sign-in is disabled for this Firebase project.",
+    "auth/unauthorized-domain": "This website domain is not allowed in the Firebase project.",
+    "auth/captcha-check-failed": "The reCAPTCHA check failed. Try requesting a new code.",
+    "auth/invalid-verification-code": "That code is not correct. Check it and try again.",
+    "auth/code-expired": "That code has expired. Request a new one.",
+    "auth/session-expired": "This verification session expired. Request a new code.",
+};
+
+const getAuthErrorMessage = (error, fallback) =>
+    authErrorMessages[error?.code] || fallback;
+
+const clearRecaptchaVerifier = (verifierRef) => {
+    const verifier = verifierRef.current;
+    verifierRef.current = null;
+    verifier?.clear();
+};
+
 function App() {
     const [phone, setPhone] = useState("");
     const [otp, setOtp] = useState("");
-    const [enableTestOtp, setEnableTestOtp] = useState(false);
+    const [confirmationResult, setConfirmationResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [showGoTop, setShowGoTop] = useState(false);
+    const recaptchaContainerRef = useRef(null);
+    const recaptchaVerifierRef = useRef(null);
+
+    const showOtpForm = confirmationResult !== null;
 
     useEffect(() => {
         const updateGoTop = () => setShowGoTop(window.scrollY > 420);
@@ -51,8 +76,18 @@ function App() {
         return () => window.removeEventListener("scroll", updateGoTop);
     }, []);
 
+    useEffect(
+        () => () => clearRecaptchaVerifier(recaptchaVerifierRef),
+        [],
+    );
+
     const sendOTP = async () => {
-        if (!phone || phone.length < 8) {
+        if (!isFirebaseConfigured || !auth) {
+            toast.error("Set the Firebase web app values in .env.local first.");
+            return;
+        }
+
+        if (!phone || phone.replace(/\D/g, "").length < 8) {
             toast.error("Enter a valid phone number.");
             return;
         }
@@ -60,24 +95,35 @@ function App() {
         setLoading(true);
 
         try {
-            const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
+            if (!recaptchaVerifierRef.current) {
+                recaptchaVerifierRef.current = new RecaptchaVerifier(
+                    auth,
+                    recaptchaContainerRef.current,
+                    {},
+                );
+            }
+
             const confirmationResult = await signInWithPhoneNumber(
                 auth,
                 phone,
-                recaptcha,
+                recaptchaVerifierRef.current,
             );
-            setEnableTestOtp(true);
-            window.confirmationResult = confirmationResult;
+            setConfirmationResult(confirmationResult);
+            setOtp("");
+            clearRecaptchaVerifier(recaptchaVerifierRef);
             toast.success("OTP sent. Enter it below.");
         } catch (error) {
-            toast.error(error.message || "Unable to send OTP.");
+            clearRecaptchaVerifier(recaptchaVerifierRef);
+            toast.error(
+                getAuthErrorMessage(error, "Unable to send OTP. Please try again."),
+            );
         } finally {
             setLoading(false);
         }
     };
 
     const verifyOTP = async () => {
-        if (!window.confirmationResult || otp.length < 4) {
+        if (!confirmationResult || otp.length !== 6) {
             toast.error("Enter the OTP you received.");
             return;
         }
@@ -85,14 +131,19 @@ function App() {
         setLoading(true);
 
         try {
-            const data = await window.confirmationResult.confirm(otp);
+            const data = await confirmationResult.confirm(otp);
+            setConfirmationResult(null);
+            setPhone("");
+            setOtp("");
             toast.success(
                 data.user
                     ? "Phone number verified."
                     : "Phone number could not be verified.",
             );
         } catch (error) {
-            toast.error(error.message || "Unable to verify OTP.");
+            toast.error(
+                getAuthErrorMessage(error, "Unable to verify OTP. Please try again."),
+            );
         } finally {
             setLoading(false);
         }
@@ -139,12 +190,20 @@ function App() {
 
                     <div className={styles.form}>
                         <h2>
-                            {enableTestOtp
+                            {showOtpForm
                                 ? "Enter your OTP"
                                 : "Enter your phone number"}
                         </h2>
 
-                        {enableTestOtp ? (
+                        {!isFirebaseConfigured && (
+                            <p className={styles.configNotice} role="status">
+                                Firebase phone authentication is not configured yet.
+                                Copy <code>.env.example</code> to <code>.env.local</code>
+                                and add your Firebase web app values.
+                            </p>
+                        )}
+
+                        {showOtpForm ? (
                             <>
                                 <label htmlFor="otp">One-time password</label>
                                 <TextField
@@ -156,7 +215,12 @@ function App() {
                                         setOtp(event.target.value.replace(/\D/g, ""))
                                     }
                                     placeholder="Enter OTP"
-                                    inputProps={{ inputMode: "numeric", maxLength: 6 }}
+                                    inputProps={{
+                                        inputMode: "numeric",
+                                        maxLength: 6,
+                                        autoComplete: "one-time-code",
+                                        pattern: "[0-9]*",
+                                    }}
                                 />
                                 <Button
                                     variant="contained"
@@ -172,7 +236,7 @@ function App() {
                                     className={styles.textButton}
                                     type="button"
                                     onClick={() => {
-                                        setEnableTestOtp(false);
+                                        setConfirmationResult(null);
                                         setOtp("");
                                     }}
                                 >
@@ -188,13 +252,13 @@ function App() {
                                     value={phone}
                                     onChange={(value) => setPhone("+" + value)}
                                 />
-                                <div id="recaptcha" />
+                                <div id="recaptcha" ref={recaptchaContainerRef} />
                                 <Button
                                     variant="contained"
                                     fullWidth
                                     sx={{ marginTop: "15px" }}
                                     onClick={sendOTP}
-                                    disabled={loading}
+                                    disabled={loading || !isFirebaseConfigured}
                                 >
                                     {loading ? "Sending..." : "Send OTP"}
                                 </Button>

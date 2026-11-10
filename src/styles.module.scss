@@ -17,6 +17,8 @@
 .points svg { color: #75dbad; }
 .form { padding: clamp(1.25rem, 4vw, 2rem); border: 1px solid rgba(150, 194, 225, 0.22); border-radius: 18px; background: rgba(4, 15, 27, 0.55); }
 .form h2 { margin: 0 0 1.25rem; color: #fff; font-size: 1.45rem; }
+.configNotice { margin: 0 0 1rem; padding: 0.75rem; border: 1px solid rgba(255, 190, 92, 0.35); border-radius: 8px; color: #f2d9ac; background: rgba(105, 68, 14, 0.2); font-size: 0.85rem; line-height: 1.55; }
+.configNotice code { color: #fff; }
 .form label { display: block; margin-bottom: 0.5rem; color: #c9dce9; font-size: 0.85rem; font-weight: 600; }
 .form :global(.react-tel-input) { width: 100%; }
 .form :global(.react-tel-input .form-control) { width: 100%; min-height: 40px; border: 1px solid rgba(150, 194, 225, 0.26); border-radius: 8px; color: #fff; background: #0b2133; }
